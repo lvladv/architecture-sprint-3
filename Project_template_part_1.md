@@ -62,7 +62,7 @@
 Чтобы добавить ссылку в файл Readme.md, нужно использовать синтаксис Markdown. Это делают так:
 
 ```markdown
-[Context](./Context.puml)
+[Context](https://github.com/lvladv/architecture-sprint-3/blob/sprint_3/Context.puml)
 ```
 
 # Задание 2. Проектирование микросервисной архитектуры
