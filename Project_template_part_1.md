@@ -71,15 +71,105 @@
 
 **Диаграмма контейнеров (Containers)**
 
-Добавьте диаграмму.
+@startuml
+title "Теплый дом" Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "Пользователь", "Пользователь системы")
+System(WarmHouse, "Теплый дом", "Система подключения и управления устройствами")
+
+Container_Boundary(WarmHouse, "FitLife System") {
+  Container(WebApp, "Web Application", "React", "Управление через веб-приложение")
+  Container(MobileApp, "Mobile Application", "ReactNative", "Упраление через мобильное приложение")
+  Container(Gateway, "API Gateway", "Java,Spring")
+  Container(UserDevicesService, "Api Server Application", "Java,Spring", "Микросервис по подключению/отключению устройств")
+  Container(DeviceManagementService, "Api Server Application", "Java,Spring", "Микросервис по управлению устройствами")
+  Container(UserDevicesDatabase, "Database", "PostgreSQL", "Хранит данные о пользователе и имеющихся у него устройствах")
+  Container(DeviceManagementDatabase, "Database", "PostgreSQL", "Хранит данные подключеных устройствах пользователя и их статусы")
+}
+
+Rel(user, WebApp, "Uses the system")
+Rel(user, MobileApp, "Uses the system")
+Rel(WebApp,Gateway,"Reads/Writes user data")
+Rel(MobileApp,Gateway,"Reads/Writes user data")
+Rel(Gateway,UserDevicesService,"запрос к сервису по устройсвам")
+Rel(Gateway,DeviceManagementService,"измение статуса ус-ва (например вкл/выкл)")
+Rel(UserDevicesService,UserDevicesDatabase,"Подключене/удаление устройства")
+Rel(DeviceManagementService,DeviceManagementDatabase,"Запись данных об измении статуса устройства")
+@enduml
 
 **Диаграмма компонентов (Components)**
 
-Добавьте диаграмму для каждого из выделенных микросервисов.
+@startuml
+title WarmHouse DeviceManagementService Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(WarmHouse, "Система управления устройствами") {
+  Container(DeviceManagementService, "Api Server Application", "Java,Spring", "Микросервис по управлению устройствами")
+  Container(DeviceManagementDatabase, "Database", "PostgreSQL", "Хранит данные подключеных устройствах пользователя и их статусы")
+}
+
+Container(DeviceManagementService, "Web Application", "Java, Spring") {
+  Component(LightController, "LightController", "Управление светом")
+  Component(HeatingController, "HeatingController", "Управление отоплением")
+  Component(GatesController, "GatesController", "Управление воротами")
+  Component(SurveillanceController, "SurveillanceController", "Управление наблюдлением")
+  Component(ServiceLayer, "Service Layer", "Business logic")
+  Component(RepositoryLayer, "Repository Layer", "Data access logic")
+
+}
+
+Rel(LightController,ServiceLayer,"Calls business logic")
+Rel(HeatingController,ServiceLayer,"Calls business logic")
+Rel(GatesController,ServiceLayer,"Calls business logic")
+Rel(SurveillanceController,ServiceLayer,"Calls business logic")
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer, DeviceManagementDatabase, "Записываем и получаем статус устройства в базу")
+@enduml
 
 **Диаграмма кода (Code)**
 
-Добавьте одну диаграмму или несколько.
+@startuml
+title Device Management Code Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+class User {
+  +String name
+  +String email
+  +List<Membership> membership
+  +void register()
+  +void login()
+}
+
+class Membership {
+  +String type
+  +String status
+  +Date startDate
+  +Date endDate
+  +void control()
+  +void status()
+}
+
+class Device {
+  +Date date
+  +String activity
+  +void control()
+  +void getStatus()
+}
+
+User "1" -- "0..*" Membership : has
+Membership "1" -- "0..*" Device : includes
+
+@enduml
 
 # Задание 3. Разработка ER-диаграммы
 
