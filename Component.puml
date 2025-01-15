@@ -1,0 +1,29 @@
+@startuml
+title WarmHouse DeviceManagementService Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(WarmHouse, "Система управления устройствами") {
+  Container(DeviceManagementService, "Api Server Application", "Java,Spring", "Микросервис по управлению устройствами")
+  Container(DeviceManagementDatabase, "Database", "PostgreSQL", "Хранит данные подключеных устройствах пользователя и их статусы")
+}
+
+Container(DeviceManagementService, "Web Application", "Java, Spring") {
+  Component(LightController, "LightController", "Управление светом")
+  Component(HeatingController, "HeatingController", "Управление отоплением")
+  Component(GatesController, "GatesController", "Управление воротами")
+  Component(SurveillanceController, "SurveillanceController", "Управление наблюдлением")
+  Component(ServiceLayer, "Service Layer", "Business logic")
+  Component(RepositoryLayer, "Repository Layer", "Data access logic")
+
+}
+
+Rel(LightController,ServiceLayer,"Calls business logic")
+Rel(HeatingController,ServiceLayer,"Calls business logic")
+Rel(GatesController,ServiceLayer,"Calls business logic")
+Rel(SurveillanceController,ServiceLayer,"Calls business logic")
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer, DeviceManagementDatabase, "Записываем и получаем статус устройства в базу")
+@enduml
