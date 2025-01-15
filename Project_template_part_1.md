@@ -174,3 +174,68 @@ Membership "1" -- "0..*" Device : includes
 # Задание 3. Разработка ER-диаграммы
 
 Добавьте сюда ER-диаграмму. Она должна отражать ключевые сущности системы, их атрибуты и тип связей между ними.
+
+@startuml
+
+entity "User" {
+  * user_id : NUMBER
+  --
+  username : VARCHAR
+  email : VARCHAR
+  password : VARCHAR
+  created_at: DATETIME
+  updeted_at: DATETIME
+}
+
+entity "HOME" {
+  * home_id : NUMBER
+  --
+  name : VARCHAR
+  description: STRING
+  created_at: DATETIME
+  updeted_at: DATETIME
+}
+
+entity "Device" {
+  * device_id : NUMBER
+  --
+  activation_date: DATE
+  name: STRING
+  type_id: NUMBER
+  telemetry_id: NUMBER
+  module_id: NUMBER
+  serial_number: STRING
+}
+
+entity "TelemetryData" {
+  * telemetry_id : NUMBER
+  --
+  created_at: DATETIME
+  name: STRING
+  status: STRING
+}
+
+entity "DeviceType" {
+  * type_id : NUMBER
+  --
+  updeted_at: DATETIME
+  name: STRING
+}
+
+entity "Module" {
+  * module_id : NUMBER
+  --
+  created_at: DATETIME
+  updeted_at: DATETIME
+  name: STRING
+}
+
+
+
+User ||--o{ HOME
+HOME ||--o{ Device
+Device ||--o{ TelemetryData
+Device ||--o{ Module
+Device ||--o{ DeviceType
+  
+@enduml
